@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gmail to Notion</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div id="app">
+    <h3>Gmail to Notion</h3>
+
+    <!-- 初始載入狀態 -->
+    <div id="loading">
+      <p>載入中...</p>
+    </div>
+
+    <!-- 錯誤訊息 -->
+    <div id="error" class="hidden">
+      <p id="error-msg"></p>
+    </div>
+
+    <!-- 模式選擇 -->
+    <div id="mode-select" class="hidden">
+      <button id="btn-mail" class="mode-btn">存成郵件備存</button>
+      <button id="btn-bill" class="mode-btn" disabled title="尚未實作">存成帳單</button>
+    </div>
+
+    <!-- 郵件備存表單 -->
+    <div id="mail-form" class="hidden">
+      <div class="form-section">
+        <label>主旨</label>
+        <input type="text" id="mail-subject" readonly>
+      </div>
+
+      <div class="form-section">
+        <label>寄件人郵件</label>
+        <input type="text" id="mail-sender" readonly>
+      </div>
+
+      <div class="form-section">
+        <label>收件日期</label>
+        <input type="text" id="mail-date" readonly>
+      </div>
+
+      <div class="form-section">
+        <label>郵件分類 <span class="hint">(可新增)</span></label>
+        <div id="mail-category-container" class="tag-container"></div>
+        <input type="text" id="mail-category-input" placeholder="輸入後按 Enter 新增">
+      </div>
+
+      <div class="form-section">
+        <label>標籤分類 <span class="hint">(可新增)</span></label>
+        <div id="tag-category-container" class="tag-container"></div>
+        <input type="text" id="tag-category-input" placeholder="輸入後按 Enter 新增">
+      </div>
+
+      <div class="form-section">
+        <label>處理狀況</label>
+        <select id="mail-process-status">
+          <option value="">-- 選擇 --</option>
+        </select>
+      </div>
+
+      <div class="form-section">
+        <label>閱讀狀況</label>
+        <select id="mail-read-status">
+          <option value="">-- 選擇 --</option>
+        </select>
+      </div>
+
+      <div class="form-section">
+        <label>為什麼要存？</label>
+        <textarea id="mail-reason" rows="3" placeholder="輸入備註..."></textarea>
+      </div>
+
+      <div class="form-section">
+        <label>附件</label>
+        <div id="mail-attachments" class="attachments-list"></div>
+      </div>
+
+      <div class="form-actions">
+        <button id="btn-back" class="btn-secondary">返回</button>
+        <button id="btn-save-mail" class="btn-primary">儲存到 Notion</button>
+      </div>
+    </div>
+
+    <!-- 儲存中 -->
+    <div id="saving" class="hidden">
+      <p>儲存中...</p>
+    </div>
+
+    <!-- 儲存成功 -->
+    <div id="success" class="hidden">
+      <p class="success-msg">✓ 儲存成功！</p>
+      <a id="notion-link" href="#" target="_blank">在 Notion 中查看</a>
+      <button id="btn-close" class="btn-primary">關閉</button>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
