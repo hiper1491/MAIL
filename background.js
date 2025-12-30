@@ -397,7 +397,7 @@ async function handleSaveBill(data) {
   // 建立帳單頁面（只處理指定的 4 個欄位）
   const pageData = {
     parent: { database_id: settings.billDatabaseId },
-    icon: { type: 'emoji', emoji: '🧾' },
+    icon: { type: 'emoji', emoji: '💳' },
     properties: {}
   };
 
