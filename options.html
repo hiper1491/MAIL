@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>Gmail to Notion - 設定</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 24px;
+      max-width: 500px;
+      margin: 0 auto;
+      background: #f5f5f5;
+    }
+    h1 { font-size: 20px; margin: 0 0 24px; }
+    .form-group {
+      background: #fff;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      border: 1px solid #e5e7eb;
+    }
+    .group-title {
+      font-weight: 600;
+      margin-bottom: 12px;
+      font-size: 15px;
+    }
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+    input[type="text"]:focus, input[type="password"]:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+    .hint {
+      font-size: 12px;
+      color: #6b7280;
+      margin: -8px 0 12px;
+    }
+    .radio-group {
+      margin-bottom: 16px;
+    }
+    .radio-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .radio-option:hover {
+      border-color: #c7d2fe;
+      background: #f5f3ff;
+    }
+    .radio-option.selected {
+      border-color: #6366f1;
+      background: #f5f3ff;
+    }
+    .radio-option input[type="radio"] {
+      margin-top: 3px;
+    }
+    .radio-content {
+      flex: 1;
+    }
+    .radio-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .radio-desc {
+      font-size: 12px;
+      color: #6b7280;
+    }
+    .warning-box {
+      background: #fef3c7;
+      border: 1px solid #f59e0b;
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      color: #92400e;
+    }
+    .direct-settings {
+      display: none;
+    }
+    .direct-settings.show {
+      display: block;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: #6366f1;
+      color: #fff;
+      width: 100%;
+    }
+    .btn-primary:hover { background: #4f46e5; }
+    #status {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      display: none;
+      text-align: center;
+    }
+    #status.success {
+      display: block;
+      background: #d1fae5;
+      color: #065f46;
+    }
+    #status.error {
+      display: block;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+  </style>
+</head>
+<body>
+  <h1>Gmail to Notion 設定</h1>
+
+  <!-- 模式選擇 -->
+  <div class="form-group">
+    <div class="group-title">使用模式</div>
+
+    <div class="radio-group">
+      <label class="radio-option selected" id="option-direct">
+        <input type="radio" name="mode" value="direct" checked>
+        <div class="radio-content">
+          <div class="radio-title">直接模式</div>
+          <div class="radio-desc">不需要 Backend，Extension 直接連接 Notion（適合個人使用）</div>
+        </div>
+      </label>
+
+      <label class="radio-option" id="option-backend">
+        <input type="radio" name="mode" value="backend">
+        <div class="radio-content">
+          <div class="radio-title">Backend 模式</div>
+          <div class="radio-desc">透過 Cloudflare Workers，支援進階功能（日後可切換）</div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <!-- 直接模式設定 -->
+  <div class="direct-settings show" id="direct-settings">
+    <div class="warning-box">
+      直接模式為暫時方案，API Key 將儲存在瀏覽器中。日後可隨時切換回 Backend 模式以獲得更好的安全性。
+    </div>
+
+    <div class="form-group">
+      <div class="group-title">Notion 設定</div>
+
+      <label for="notion-key">Notion API Key</label>
+      <input type="password" id="notion-key" placeholder="ntn_xxxxx 或 secret_xxxxx">
+      <div class="hint">從 notion.so/my-integrations 取得</div>
+
+      <label for="database-id">郵件資料庫 ID</label>
+      <input type="text" id="database-id" placeholder="2d523f32ff398079a229c5c934fac033">
+      <div class="hint">郵件備存用的資料庫 ID</div>
+
+      <label for="bill-database-id">帳單資料庫 ID</label>
+      <input type="text" id="bill-database-id" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+      <div class="hint">帳單備存用的資料庫 ID（可空，若不使用帳單功能）</div>
+    </div>
+  </div>
+
+  <!-- Backend 模式設定 -->
+  <div class="direct-settings" id="backend-settings">
+    <div class="form-group">
+      <div class="group-title">Backend 設定</div>
+
+      <label for="backend-url">Backend API URL</label>
+      <input type="text" id="backend-url" placeholder="https://your-worker.workers.dev">
+      <div class="hint">Cloudflare Workers URL</div>
+    </div>
+  </div>
+
+  <button id="btn-save" class="btn-primary">儲存設定</button>
+  <div id="status"></div>
+
+  <script src="options.js"></script>
+</body>
+</html>

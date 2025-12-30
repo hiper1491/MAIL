@@ -1,16 +1,22 @@
 {
   "manifest_version": 3,
   "name": "Gmail to Notion",
-  "version": "1.0.0",
-  "description": "一鍵將 Gmail 郵件存到 Notion",
+  "version": "1.2.0",
+  "description": "一鍵將 Gmail 郵件存到 Notion（含附件與圖片）",
   "permissions": [
     "activeTab",
     "storage"
   ],
   "host_permissions": [
     "https://mail.google.com/*",
-    "https://api.notion.com/*"
+    "https://api.notion.com/*",
+    "http://localhost:8787/*",
+    "https://*.workers.dev/*"
   ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
   "background": {
     "service_worker": "background.js"
   },

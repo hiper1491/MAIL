@@ -8,93 +8,186 @@
 </head>
 <body>
   <div id="app">
-    <h3>Gmail to Notion</h3>
+    <div class="header-row">
+      <h3>📬 Gmail to Notion</h3>
+      <button id="btn-settings" class="btn-icon" title="設定">⚙️</button>
+    </div>
+
+    <!-- 連線狀態 -->
+    <div id="connection-status" class="connection-status hidden">
+      <span id="connection-indicator" class="indicator"></span>
+      <span id="connection-text"></span>
+    </div>
 
     <!-- 初始載入狀態 -->
     <div id="loading">
+      <div class="loading-spinner"></div>
       <p>載入中...</p>
     </div>
 
     <!-- 錯誤訊息 -->
     <div id="error" class="hidden">
+      <div class="error-icon">😿</div>
       <p id="error-msg"></p>
     </div>
 
     <!-- 模式選擇 -->
     <div id="mode-select" class="hidden">
-      <button id="btn-mail" class="mode-btn">存成郵件備存</button>
-      <button id="btn-bill" class="mode-btn" disabled title="尚未實作">存成帳單</button>
+      <button id="btn-mail" class="mode-btn">
+        <span class="mode-icon">📧</span>
+        <span class="mode-text">存成郵件備存</span>
+      </button>
+      <button id="btn-bill" class="mode-btn">
+        <span class="mode-icon">🧾</span>
+        <span class="mode-text">存成帳單</span>
+      </button>
     </div>
 
     <!-- 郵件備存表單 -->
     <div id="mail-form" class="hidden">
-      <div class="form-section">
-        <label>主旨</label>
-        <input type="text" id="mail-subject" readonly>
+      <!-- 郵件資訊 -->
+      <div class="form-group">
+        <div class="group-header">📋 郵件資訊</div>
+
+        <div class="form-section">
+          <label>📌 主旨</label>
+          <input type="text" id="mail-subject" readonly>
+        </div>
+
+        <div class="form-section">
+          <label>✉️ 寄件人</label>
+          <input type="text" id="mail-sender" readonly>
+        </div>
+
+        <div class="form-section">
+          <label>📅 日期</label>
+          <input type="text" id="mail-date" readonly>
+        </div>
       </div>
 
-      <div class="form-section">
-        <label>寄件人郵件</label>
-        <input type="text" id="mail-sender" readonly>
+      <!-- 分類設定 -->
+      <div class="form-group">
+        <div class="group-header">🏷️ 分類設定</div>
+
+        <!-- 郵件分類（單選，可搜尋、可新增） -->
+        <div class="form-section">
+          <label>📂 郵件分類 <span class="hint">(可搜尋、可新增)</span></label>
+          <div class="combobox" id="mail-category-box">
+            <input type="text" id="mail-category-input" placeholder="輸入搜尋或新增..." autocomplete="off">
+            <span class="combobox-arrow">▼</span>
+            <div class="combobox-dropdown hidden" id="mail-category-dropdown"></div>
+          </div>
+          <div class="selected-tags" id="mail-category-selected"></div>
+        </div>
+
+        <!-- 標籤分類（多選，可搜尋、可新增） -->
+        <div class="form-section">
+          <label>🔖 標籤分類 <span class="hint">(可搜尋、可新增、多選)</span></label>
+          <div class="combobox" id="tag-category-box">
+            <input type="text" id="tag-category-input" placeholder="輸入搜尋或新增..." autocomplete="off">
+            <span class="combobox-arrow">▼</span>
+            <div class="combobox-dropdown hidden" id="tag-category-dropdown"></div>
+          </div>
+          <div class="selected-tags" id="tag-category-selected"></div>
+        </div>
       </div>
 
-      <div class="form-section">
-        <label>收件日期</label>
-        <input type="text" id="mail-date" readonly>
+      <!-- 處理狀態（簡單下拉選單） -->
+      <div class="form-group">
+        <div class="group-header">📊 處理狀態</div>
+
+        <div class="form-row">
+          <div class="form-section half">
+            <label>⚙️ 處理狀況</label>
+            <select id="process-status-select">
+              <option value="待處理" selected>⏳ 待處理</option>
+              <option value="已處理">✅ 已處理</option>
+              <option value="追蹤中">👀 追蹤中</option>
+            </select>
+          </div>
+
+          <div class="form-section half">
+            <label>👁️ 閱讀狀況</label>
+            <select id="read-status-select">
+              <option value="未讀" selected>📩 未讀</option>
+              <option value="已讀">📭 已讀</option>
+            </select>
+          </div>
+        </div>
       </div>
 
-      <div class="form-section">
-        <label>郵件分類 <span class="hint">(可新增)</span></label>
-        <div id="mail-category-container" class="tag-container"></div>
-        <input type="text" id="mail-category-input" placeholder="輸入後按 Enter 新增">
+      <!-- 備註 -->
+      <div class="form-group">
+        <div class="group-header">📝 備註</div>
+        <div class="form-section">
+          <label>💭 為什麼要存？</label>
+          <textarea id="mail-reason" rows="3" placeholder="記錄你存這封信的原因..."></textarea>
+        </div>
       </div>
 
-      <div class="form-section">
-        <label>標籤分類 <span class="hint">(可新增)</span></label>
-        <div id="tag-category-container" class="tag-container"></div>
-        <input type="text" id="tag-category-input" placeholder="輸入後按 Enter 新增">
-      </div>
-
-      <div class="form-section">
-        <label>處理狀況</label>
-        <select id="mail-process-status">
-          <option value="">-- 選擇 --</option>
-        </select>
-      </div>
-
-      <div class="form-section">
-        <label>閱讀狀況</label>
-        <select id="mail-read-status">
-          <option value="">-- 選擇 --</option>
-        </select>
-      </div>
-
-      <div class="form-section">
-        <label>為什麼要存？</label>
-        <textarea id="mail-reason" rows="3" placeholder="輸入備註..."></textarea>
-      </div>
-
-      <div class="form-section">
-        <label>附件</label>
+      <!-- 附件 -->
+      <div class="form-group">
+        <div class="group-header">📎 附件與圖片</div>
         <div id="mail-attachments" class="attachments-list"></div>
       </div>
 
       <div class="form-actions">
-        <button id="btn-back" class="btn-secondary">返回</button>
-        <button id="btn-save-mail" class="btn-primary">儲存到 Notion</button>
+        <button id="btn-back" class="btn-secondary">← 返回</button>
+        <button id="btn-save-mail" class="btn-primary">💾 儲存到 Notion</button>
+      </div>
+    </div>
+
+    <!-- 帳單表單 -->
+    <div id="bill-form" class="hidden">
+      <div class="form-group">
+        <!-- 月消費金額 + 帳單月份（同一排） -->
+        <div class="form-row">
+          <div class="form-section half">
+            <label>💵 月消費金額</label>
+            <input type="number" id="bill-amount" placeholder="可空">
+          </div>
+          <div class="form-section half">
+            <label>📅 帳單月份</label>
+            <input type="month" id="bill-month">
+          </div>
+        </div>
+
+        <!-- 付款方式（單獨一排） -->
+        <div class="form-section">
+          <label>💳 付款方式</label>
+          <select id="bill-payment-method"><option value="">-- 選擇 --</option></select>
+        </div>
+
+        <!-- 文字備註 -->
+        <div class="form-section">
+          <label>💭 文字備註</label>
+          <textarea id="bill-note" rows="2" placeholder="金額異常、調整原因等..."></textarea>
+        </div>
+
+        <!-- 附件提示 -->
+        <div id="bill-attachments" class="attachments-list"></div>
+      </div>
+
+      <div class="form-actions">
+        <button id="btn-bill-back" class="btn-secondary">← 返回</button>
+        <button id="btn-save-bill" class="btn-primary">💾 儲存到 Notion</button>
       </div>
     </div>
 
     <!-- 儲存中 -->
     <div id="saving" class="hidden">
-      <p>儲存中...</p>
+      <div class="loading-spinner"></div>
+      <p>正在儲存到 Notion...</p>
+      <p class="saving-hint">正在上傳附件與圖片 🐾</p>
     </div>
 
     <!-- 儲存成功 -->
     <div id="success" class="hidden">
-      <p class="success-msg">✓ 儲存成功！</p>
-      <a id="notion-link" href="#" target="_blank">在 Notion 中查看</a>
-      <button id="btn-close" class="btn-primary">關閉</button>
+      <div class="success-icon">🎉</div>
+      <p class="success-msg">儲存成功！</p>
+      <p id="success-stats" class="success-stats hidden"></p>
+      <a id="notion-link" href="#" target="_blank" rel="noopener noreferrer">📖 在 Notion 中查看</a>
+      <button id="btn-close" class="btn-primary">關閉視窗</button>
     </div>
   </div>
   <script src="popup.js"></script>

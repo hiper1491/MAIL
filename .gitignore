@@ -1,2 +1,42 @@
+# 環境變數（絕對不能上傳！）
+.env
+.env.local
+.env.*.local
+
+# Notion API Key 相關（絕對不能上傳！）
+**/secrets.js
+**/config.local.js
+
+# Node modules
+node_modules/
+.npm
+
+# Cloudflare Workers
+.wrangler/
+.dev.vars
+
+# macOS
 .DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 暫存檔
 *.log
+*.tmp
+*.temp
+
+# 測試輸出
+coverage/
+.nyc_output/
+
+# 打包輸出
+dist/
+build/
+*.zip
